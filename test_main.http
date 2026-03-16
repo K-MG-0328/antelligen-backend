@@ -123,3 +123,33 @@ Accept: application/json
 ### 뉴스 검색 - 결과 없는 키워드
 GET http://127.0.0.1:33333/api/v1/news/search?keyword=xyznonexistentkeyword123
 Accept: application/json
+
+### 관심 기사 저장 - 정상 요청
+POST http://127.0.0.1:33333/api/v1/news/save
+Content-Type: application/json
+
+{
+  "title": "삼성전자, AI 반도체 투자 확대",
+  "link": "https://news.example.com/samsung-ai-chip",
+  "source": "한국경제",
+  "published_at": "2026-03-16"
+}
+
+### 관심 기사 저장 - 중복 링크 (409 에러)
+POST http://127.0.0.1:33333/api/v1/news/save
+Content-Type: application/json
+
+{
+  "title": "삼성전자, AI 반도체 투자 확대",
+  "link": "https://news.example.com/samsung-ai-chip",
+  "source": "한국경제",
+  "published_at": "2026-03-16"
+}
+
+### 관심 기사 저장 - 필수값 누락 (422 에러)
+POST http://127.0.0.1:33333/api/v1/news/save
+Content-Type: application/json
+
+{
+  "source": "한국경제"
+}

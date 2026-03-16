@@ -1,15 +1,32 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.common.response.base_response import BaseResponse
+from app.domains.news.adapter.outbound.external.article_content_scraper import (
+    ArticleContentScraper,
+)
 from app.domains.news.adapter.outbound.external.serp_news_search_provider import (
     SerpNewsSearchProvider,
 )
+from app.domains.news.adapter.outbound.persistence.saved_article_repository_impl import (
+    SavedArticleRepositoryImpl,
+)
+from app.domains.news.application.request.save_article_request import (
+    SaveArticleRequest,
+)
 from app.domains.news.application.request.search_news_request import SearchNewsRequest
+from app.domains.news.application.response.save_article_response import (
+    SaveArticleResponse,
+)
 from app.domains.news.application.response.search_news_response import (
     SearchNewsResponse,
 )
+from app.domains.news.application.usecase.save_article_usecase import (
+    SaveArticleUseCase,
+)
 from app.domains.news.application.usecase.search_news_usecase import SearchNewsUseCase
 from app.infrastructure.config.settings import get_settings
+from app.infrastructure.database.database import get_db
 
 router = APIRouter(prefix="/news", tags=["News"])
 
@@ -26,6 +43,20 @@ async def search_news(
     usecase = SearchNewsUseCase(news_search_provider=provider)
 
     request = SearchNewsRequest(keyword=keyword, page=page, page_size=page_size)
+    result = await usecase.execute(request)
+
+    return BaseResponse.ok(data=result)
+
+
+@router.post("/save", response_model=BaseResponse[SaveArticleResponse], status_code=201)
+async def save_article(
+    request: SaveArticleRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """인증 없이 관심 기사를 저장한다. 링크에서 본문을 스크래핑하여 함께 저장한다."""
+    repository = SavedArticleRepositoryImpl(db)
+    content_provider = ArticleContentScraper()
+    usecase = SaveArticleUseCase(repository=repository, content_provider=content_provider)
     result = await usecase.execute(request)
 
     return BaseResponse.ok(data=result)

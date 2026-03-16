@@ -7,6 +7,10 @@ from app.common.exception.global_exception_handler import register_exception_han
 from app.infrastructure.config.settings import Settings, get_settings
 from app.infrastructure.database.database import engine, Base
 
+# ORM 모델 import — Base.metadata.create_all 시 테이블 자동 생성
+import app.domains.post.infrastructure.orm.post_orm  # noqa: F401
+import app.domains.news.infrastructure.orm.saved_article_orm  # noqa: F401
+
 settings: Settings = get_settings()
 
 

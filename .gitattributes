@@ -1,0 +1,15 @@
+# 모든 텍스트 파일은 저장소에 LF로 저장, checkout 시 OS 기본값 사용
+* text=auto
+
+# Python 파일은 LF 고정
+*.py text eol=lf
+
+# 설정 파일류 LF 고정
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.env text eol=lf
+*.http text eol=lf
