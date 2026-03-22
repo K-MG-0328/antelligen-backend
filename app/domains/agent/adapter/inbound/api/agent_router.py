@@ -1,6 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 
 from app.common.response.base_response import BaseResponse
+from app.domains.agent.adapter.outbound.external.http_analysis_request_client import (
+    HttpAnalysisRequestClient,
+)
 from app.domains.agent.adapter.outbound.external.mock_sub_agent_provider import (
     MockSubAgentProvider,
 )
@@ -11,9 +14,13 @@ from app.domains.agent.application.request.finance_analysis_request import (
 from app.domains.agent.application.response.frontend_agent_response import (
     FrontendAgentResponse,
 )
+from app.domains.agent.application.usecase.request_finance_analysis_usecase import (
+    RequestFinanceAnalysisUseCase,
+)
 from app.domains.agent.application.usecase.process_agent_query_usecase import (
     ProcessAgentQueryUseCase,
 )
+from app.infrastructure.config.settings import get_settings
 
 router = APIRouter(prefix="/agent", tags=["Agent"])
 
@@ -36,19 +43,15 @@ async def query_agent(request: AgentQueryRequest):
     response_model=BaseResponse[FrontendAgentResponse],
     status_code=200,
 )
-async def analyze_finance(request: FinanceAnalysisRequest):
-    provider = MockSubAgentProvider()
-    usecase = ProcessAgentQueryUseCase(provider)
-    resolved_ticker = provider.resolve_ticker(request.ticker, request.company_name)
-
-    internal_result = usecase.execute(
-        AgentQueryRequest(
-            query=request.query,
-            ticker=resolved_ticker,
-            session_id=request.session_id,
-            user_profile=request.user_profile,
-            options={"agents": ["finance"], "max_tokens": 1024},
-        )
+async def analyze_finance(
+    request: FinanceAnalysisRequest,
+    authorization: str | None = Header(default=None),
+):
+    settings = get_settings()
+    client = HttpAnalysisRequestClient(
+        finance_analysis_url=settings.analysis_api_finance_url,
+        timeout_seconds=settings.analysis_api_timeout_seconds,
     )
-    frontend_result = FrontendAgentResponse.from_internal(internal_result)
-    return BaseResponse.ok(data=frontend_result)
+    usecase = RequestFinanceAnalysisUseCase(client)
+    result = await usecase.execute(request=request, authorization=authorization)
+    return BaseResponse.ok(data=result)
