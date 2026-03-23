@@ -62,7 +62,7 @@ MOCK_NEWS_SIGNALS: dict[str, dict] = {
         "ticker": "000660",
         "signal": "bullish",
         "confidence": 0.78,
-        "summary": "HBM demand continues to support earnings improvement.",
+        "summary": "SK하이닉스 HBM4 양산 본격화로 실적 개선 기대",
         "key_points": [
             "HBM4 양산 라인 가동 시작",
             "엔비디아 공급 계약 확대",
@@ -76,7 +76,7 @@ MOCK_FINANCE_SIGNALS: dict[str, dict] = {
         "ticker": "005930",
         "signal": "neutral",
         "confidence": 0.55,
-        "summary": "Revenue is improving, but margin recovery remains limited.",
+        "summary": "매출 성장세 유지되나 영업이익률 소폭 하락",
         "key_points": [
             "2025-Q4 매출 258조 1600억 (전년 대비 +12%)",
             "영업이익률 2.5%로 전분기 대비 하락",
@@ -88,7 +88,7 @@ MOCK_FINANCE_SIGNALS: dict[str, dict] = {
         "ticker": "000660",
         "signal": "bullish",
         "confidence": 0.88,
-        "summary": "HBM sales growth is driving strong profitability.",
+        "summary": "HBM 매출 급증으로 역대 최대 영업이익 달성",
         "key_points": [
             "2025-Q4 영업이익 23조 4600억 (역대 최대)",
             "HBM 매출 비중 50% 돌파",
@@ -103,7 +103,7 @@ MOCK_DISCLOSURE_SIGNALS: dict[str, dict] = {
         "ticker": "005930",
         "signal": "bearish",
         "confidence": 0.71,
-        "summary": "Treasury stock disposal can create short-term supply pressure.",
+        "summary": "자기주식 처분 공시로 단기 수급 부담",
         "key_points": [
             "자기주식 500만주 처분 결정",
             "처분 예정 기간 3개월",
