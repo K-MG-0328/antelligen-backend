@@ -11,8 +11,12 @@ def setup_logging(level: int = logging.INFO) -> None:
     """Configure root logger with console + daily rotating file handlers.
 
     Log files are written to <project_root>/logs/ with daily rotation
-    and 30-day retention.
+    and 30-day retention. Safe to call multiple times — skips if already configured.
     """
+    root_logger = logging.getLogger()
+    if root_logger.handlers:
+        return
+
     os.makedirs(LOG_DIR, exist_ok=True)
 
     formatter = logging.Formatter(fmt=LOG_FORMAT, datefmt=LOG_DATE_FORMAT)
@@ -23,7 +27,7 @@ def setup_logging(level: int = logging.INFO) -> None:
     console_handler.setFormatter(formatter)
 
     # File handler — rotates daily at midnight, keeps 30 days
-    # Naming: logs/app.log (current), logs/2026-03-30-app.log (rotated)
+    # Naming: logs/app.log (current), logs/20260330-app.log (rotated)
     file_handler = TimedRotatingFileHandler(
         filename=os.path.join(LOG_DIR, "app.log"),
         when="midnight",
@@ -39,7 +43,6 @@ def setup_logging(level: int = logging.INFO) -> None:
         os.path.basename(name).replace("app.log.", "") + "-app.log",
     )
 
-    root_logger = logging.getLogger()
     root_logger.setLevel(level)
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)

@@ -8,8 +8,8 @@ class TextChunker:
     순수 Python만 사용한다 (hashlib, re).
     """
 
-    DEFAULT_CHUNK_SIZE = 1000
-    DEFAULT_OVERLAP = 200
+    DEFAULT_CHUNK_SIZE = 600
+    DEFAULT_OVERLAP = 100
 
     SENTENCE_DELIMITERS = re.compile(r"(?<=[.!?\n])\s+")
     SECTION_TITLE_PATTERN = re.compile(
