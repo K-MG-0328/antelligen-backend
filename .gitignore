@@ -412,3 +412,8 @@ pyrightconfig.json
 # Docker local data volumes
 mysql_data/
 redis_data/
+# Application logs
+logs/
+
+# oh-my-claudecode
+.omc/
