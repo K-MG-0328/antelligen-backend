@@ -408,3 +408,12 @@ pyrightconfig.json
 
 # exclude .DS_Store
 .DS_Store
+
+# Docker local data volumes
+mysql_data/
+redis_data/
+# Application logs
+logs/
+
+# oh-my-claudecode
+.omc/
